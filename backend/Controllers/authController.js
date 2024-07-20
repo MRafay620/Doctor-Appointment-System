@@ -5,10 +5,10 @@ import bcrypt from 'bcryptjs';
 
 const generateToken = (user) => {
     return jwt.sign(
-        { id: user._id, role: user.role },
-        process.env.JWT_SECRET_KEY, // Corrected the typo here
+        { userId: user._id, role: user.role },
+        process.env.JWT_SECRET_kEY, // Corrected the typo here
         {
-            expiresIn: '15d',
+            expiresIn: '35d',
         }
     );
 };

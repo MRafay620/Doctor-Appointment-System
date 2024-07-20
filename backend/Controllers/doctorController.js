@@ -1,3 +1,4 @@
+import Booking from "../models/BookingSchema.js";
 import Doctor from "../models/DoctorSchema.js";
 
 export const updateDoctor = async (req, res) => {
@@ -23,7 +24,7 @@ export const deleteDoctor = async (req, res) => {
 export const getSingleDoctor = async (req, res) => {
     const id = req.params.id;
     try {
-        const doctor = await Doctor.findById(id).populate('review').select("-password");
+        const doctor = await Doctor.findById(id).populate('reviews').select("-password");
         if (doctor) {
             res.status(200).json({ success: true, message: 'User found', data: doctor });
         } else {
@@ -49,3 +50,18 @@ export const getAllDoctor = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+export const getDoctorProfile = async(req,res)=>{
+    const doctorId = req.userId; // Make sure this is being correctly set in your request
+    try {
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) {
+            return res.status(404).json({ success: false, message: 'Doctor not found' });
+        }
+        const { password, ...rest } = doctor._doc; // Assuming _doc has the user document data
+        const appoinments = await Booking.find({doctor:doctorId})
+        res.status(200).json({ success: true, message: 'Profile info is getting', data: { ...rest,appoinments } });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Something went wrong, cannot get' });
+    }
+}

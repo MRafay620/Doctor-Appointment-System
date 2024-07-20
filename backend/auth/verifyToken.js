@@ -11,15 +11,16 @@ export const authenticate = async (req,res,next)=>{
     try {
         const token = authToken.split(" ")[1];
         //verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-        req.userId=decoded.userId
-        req.role=decoded.role
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_kEY);
+        // console.log(decoded)
+        req.userId=decoded.userId;
+        req.role=decoded.role;
         next();//must be call in function
     } catch (err){
         if(err.name==='TokenExpiredError'){
-            return res.status(401).json({message:'Token is expired'})
+            return res.status(401).json({message:'Token is expired'});
         }
-        return res.status(401).json({success:false, message:'Invalid token'})
+        return res.status(401).json({success:false, message:'Invalid token'});
     }
 }
 
